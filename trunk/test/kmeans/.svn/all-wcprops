@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/326/trunk/test/kmeans
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/326/trunk/test/kmeans/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/301/trunk/test/kmeans/kvsmake.conf
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/301/trunk/test/kmeans/kvsmake.vc.conf
+END

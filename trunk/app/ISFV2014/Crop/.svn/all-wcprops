@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/!svn/ver/390/trunk/app/ISFV2014/Crop
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/367/trunk/app/ISFV2014/Crop/kvsmake.vc.conf
+END
+run.sh
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/364/trunk/app/ISFV2014/Crop/run.sh
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/390/trunk/app/ISFV2014/Crop/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/367/trunk/app/ISFV2014/Crop/kvsmake.conf
+END

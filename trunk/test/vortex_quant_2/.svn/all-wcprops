@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/332/trunk/test/vortex_quant_2
+END
+VortexQuant.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/332/trunk/test/vortex_quant_2/VortexQuant.cpp
+END
+luautils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/332/trunk/test/vortex_quant_2/luautils.cpp
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/332/trunk/test/vortex_quant_2/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/332/trunk/test/vortex_quant_2/kvsmake.conf
+END
+config.lua
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/332/trunk/test/vortex_quant_2/config.lua
+END
+VortexQuant.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/332/trunk/test/vortex_quant_2/VortexQuant.h
+END
+luautils.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/332/trunk/test/vortex_quant_2/luautils.h
+END

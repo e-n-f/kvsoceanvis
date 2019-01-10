@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/345/trunk/test/multidimensional_scaling
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/345/trunk/test/multidimensional_scaling/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/301/trunk/test/multidimensional_scaling/kvsmake.conf
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/301/trunk/test/multidimensional_scaling/kvsmake.vc.conf
+END

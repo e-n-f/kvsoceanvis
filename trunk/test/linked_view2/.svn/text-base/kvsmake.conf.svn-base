@@ -1,0 +1,3 @@
+INCLUDE_PATH := -I./pcs/ -I./util/
+LIBRARY_PATH := -L/usr/lib/x86_64-linux-gnu/ -L./pcs/ -L./util/
+LINK_LIBRARY := -llua5.1-c++ -lpcs ./util/libutil.a

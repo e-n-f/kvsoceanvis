@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/345/trunk/test/streamline_with_volume
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/345/trunk/test/streamline_with_volume/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/301/trunk/test/streamline_with_volume/kvsmake.conf
+END
+run.bat
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/173/trunk/test/streamline_with_volume/run.bat
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/301/trunk/test/streamline_with_volume/kvsmake.vc.conf
+END
+run.sh
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/183/trunk/test/streamline_with_volume/run.sh
+END

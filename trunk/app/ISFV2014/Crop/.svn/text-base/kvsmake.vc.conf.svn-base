@@ -1,0 +1,3 @@
+INCLUDE_PATH = /I..\..\..\lib /I..\
+LIBRARY_PATH = /LIBPATH:..\..\..\lib\util
+LINK_LIBRARY = util.lib

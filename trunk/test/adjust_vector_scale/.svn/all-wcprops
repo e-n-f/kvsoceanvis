@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/333/trunk/test/adjust_vector_scale
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/333/trunk/test/adjust_vector_scale/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/301/trunk/test/adjust_vector_scale/kvsmake.conf
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/301/trunk/test/adjust_vector_scale/kvsmake.vc.conf
+END

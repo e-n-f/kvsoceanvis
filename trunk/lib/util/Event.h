@@ -1,0 +1,481 @@
+/*****************************************************************************/
+/**
+ *  @file   Event.h
+ *  @author Naohisa Sakamoto
+ */
+/*----------------------------------------------------------------------------
+ *
+ *  Copyright (c) Visualization Laboratory, Kyoto University.
+ *  All rights reserved.
+ *  See http://www.viz.media.kyoto-u.ac.jp/kvs/copyright/ for details.
+ *
+ *  $Id: Event.h 395 2014-10-24 09:00:30Z naohisa.sakamoto@gmail.com $
+ */
+/*****************************************************************************/
+#ifndef KVSOCEANVIS__UTIL__EVENT_H_INCLUDE
+#define KVSOCEANVIS__UTIL__EVENT_H_INCLUDE
+
+#include <string>
+#include <kvs/OpenGL>
+#include <kvs/ColorImage>
+#include <kvs/ObjectManager>
+#include <kvs/RendererManager>
+#include <kvs/Camera>
+#include <kvs/KeyPressEventListener>
+#include <kvs/MousePressEventListener>
+#include <kvs/MouseMoveEventListener>
+#include <kvs/MouseReleaseEventListener>
+#include <kvs/MouseDoubleClickEventListener>
+#include <kvs/PaintEventListener>
+
+#if KVS_SUPPORT_GLUT
+#include <kvs/glut/Screen>
+#endif
+
+#if KVS_SUPPORT_QT && defined( QT_VERSION )
+#include <kvs/qt/Screen>
+#endif
+
+
+namespace kvsoceanvis
+{
+
+namespace util
+{
+
+namespace Event
+{
+
+inline kvs::Camera* GetCamera( kvs::ScreenBase* screen_base )
+{
+    kvs::Camera* camera = NULL;
+
+#if KVS_SUPPORT_GLUT
+    kvs::glut::Screen* glut_screen = dynamic_cast<kvs::glut::Screen*>( screen_base );
+    if ( glut_screen ) { camera = glut_screen->scene()->camera(); }
+#endif
+
+#if KVS_SUPPORT_QT && defined( QT_VERSION )
+    if ( !glut_screen )
+    {
+        kvs::qt::Screen* qt_screen = dynamic_cast<kvs::qt::Screen*>( screen_base );
+        if ( qt_screen ) { camera = qt_screen->scene()->camera(); }
+    }
+#endif
+
+    return camera;
+}
+
+template <typename Object>
+Object* GetObject( kvs::ScreenBase* screen_base, const std::string& object_name )
+{
+    kvs::ObjectManager* manager = NULL;
+
+#if KVS_SUPPORT_GLUT
+    kvs::glut::Screen* glut_screen = dynamic_cast<kvs::glut::Screen*>( screen_base );
+    if ( glut_screen ) { manager = glut_screen->scene()->objectManager(); }
+#endif
+
+#if KVS_SUPPORT_QT && defined( QT_VERSION )
+    if ( !glut_screen )
+    {
+        kvs::qt::Screen* qt_screen = dynamic_cast<kvs::qt::Screen*>( screen_base );
+        if ( qt_screen ) { manager = qt_screen->scene()->objectManager(); }
+    }
+#endif
+
+    if ( !manager ) return NULL;
+    else return static_cast<Object*>( manager->object( object_name ) );
+}
+
+template <typename Renderer>
+Renderer* GetRenderer( kvs::ScreenBase* screen_base, const std::string& renderer_name )
+{
+    kvs::RendererManager* manager = NULL;
+
+#if KVS_SUPPORT_GLUT
+    kvs::glut::Screen* glut_screen = dynamic_cast<kvs::glut::Screen*>( screen_base );
+    if ( glut_screen ) { manager = glut_screen->scene()->rendererManager(); }
+#endif
+
+#if KVS_SUPPORT_QT && defined( QT_VERSION )
+    if ( !glut_screen )
+    {
+        kvs::qt::Screen* qt_screen = dynamic_cast<kvs::qt::Screen*>( screen_base );
+        if ( qt_screen ) { manager = qt_screen->scene()->rendererManager(); }
+    }
+#endif
+
+    if ( !manager ) return NULL;
+    else return static_cast<Renderer*>( manager->renderer( renderer_name ) );
+}
+
+struct Parameter
+{
+    int X0;
+    int X1;
+    int Y0;
+    int Y1;
+    int pX;
+    int pY;
+    int SelectedAxis;
+    bool SettingRange;
+    bool MovingRange;
+
+    Parameter( void ):
+        X0(0),
+        X1(0),
+        Y0(0),
+        Y1(0),
+        pX(0),
+        pY(0),
+        SelectedAxis(0),
+        SettingRange(false),
+        MovingRange(false){}
+};
+
+template <typename Object, typename Renderer>
+class KeyPress : public kvs::KeyPressEventListener
+{
+private:
+
+    Parameter& m_parameter;
+    std::string m_object_name;
+    std::string m_renderer_name;
+
+public:
+
+    KeyPress( Parameter& parameter, std::string object_name, std::string renderer_name ):
+        m_parameter( parameter ),
+        m_object_name( object_name ),
+        m_renderer_name( renderer_name ) {}
+
+    void update( kvs::KeyEvent* event )
+    {
+//        Object* object = static_cast<Object*>( screen()->objectManager()->object( m_object_name ) );
+//        Renderer* renderer = static_cast<Renderer*>( screen()->rendererManager()->renderer( m_renderer_name ) );
+//        Object* object = kvsoceanvis::util::Event::GetObject<Object>( screen(), m_object_name );
+//        Renderer* renderer = kvsoceanvis::util::Event::GetRenderer<Renderer>( screen(), m_renderer_name );
+        Object* object = static_cast<Object*>( scene()->object( m_object_name ) );
+        Renderer* renderer = static_cast<Renderer*>( scene()->renderer( m_renderer_name ) );
+        if ( !object || !renderer ) return;
+
+        switch ( event->key() )
+        {
+        case kvs::Key::Right:
+        {
+            int axis = renderer->activeAxis() + 1;
+            if ( axis > int( object->numberOfColumns() - 1 ) ) axis = int( object->numberOfColumns() - 1 );
+            renderer->selectAxis( axis );
+            break;
+        }
+        case kvs::Key::Left:
+        {
+            int axis = renderer->activeAxis() - 1;
+            if ( axis < 0 ) axis = 0;
+            renderer->selectAxis( axis );
+            break;
+        }
+        case kvs::Key::s:
+        {
+            kvs::ColorImage image = kvsoceanvis::util::Event::GetCamera( screen() )->snapshot();
+            image.write("snapshot.bmp");
+            break;
+        }
+        default: break;
+        }
+    }
+};
+
+template <typename Object, typename Renderer>
+class MousePress : public kvs::MousePressEventListener
+{
+private:
+
+    Parameter& m_parameter;
+    std::string m_object_name;
+    std::string m_renderer_name;
+
+public:
+
+    MousePress( Parameter& parameter, std::string object_name, std::string renderer_name ):
+        m_parameter( parameter ),
+        m_object_name( object_name ),
+        m_renderer_name( renderer_name ) {}
+
+    void update( kvs::MouseEvent* event )
+    {
+//        Object* object = static_cast<Object*>( screen()->objectManager()->object( m_object_name ) );
+//        Renderer* renderer = static_cast<Renderer*>( screen()->rendererManager()->renderer( m_renderer_name ) );
+//        Object* object = kvsoceanvis::util::Event::GetObject<Object>( screen(), m_object_name );
+//        Renderer* renderer = kvsoceanvis::util::Event::GetRenderer<Renderer>( screen(), m_renderer_name );
+        Object* object = static_cast<Object*>( scene()->object( m_object_name ) );
+        Renderer* renderer = static_cast<Renderer*>( scene()->renderer( m_renderer_name ) );
+        if ( !object || !renderer ) return;
+
+        m_parameter.X0 = event->x();
+        m_parameter.Y0 = screen()->height() - event->y();
+        m_parameter.pX = m_parameter.X0;
+        m_parameter.pY = m_parameter.Y0;
+
+/*
+        const int X_min = renderer->xmin();
+        const int X_max = renderer->xmax();
+*/
+        const int X_min = renderer->leftMargin();
+        const int X_max = screen()->width() - renderer->rightMargin();
+
+        const size_t naxes = object->numberOfColumns();
+        const float stride = float( X_max - X_min ) / ( naxes - 1 );
+        for ( size_t i = 0; i < naxes; i++ )
+        {
+            const float ex = static_cast<float>( event->x() );
+            const float x = renderer->leftMargin() + stride * i;
+            if ( x - 5 < ex && ex < x + 5 )
+            {
+                m_parameter.SelectedAxis = i;
+                m_parameter.MovingRange = true;
+            }
+            else if ( x - 10 < ex && ex < x + 10 )
+            {
+                m_parameter.SelectedAxis = i;
+                m_parameter.SettingRange = true;
+            }
+        }
+    }
+};
+
+template <typename Object, typename Renderer>
+class MouseDoubleClick : public kvs::MouseDoubleClickEventListener
+{
+private:
+
+    Parameter& m_parameter;
+    std::string m_object_name;
+    std::string m_renderer_name;
+
+public:
+
+    MouseDoubleClick( Parameter& parameter, std::string object_name, std::string renderer_name ):
+        m_parameter( parameter ),
+        m_object_name( object_name ),
+        m_renderer_name( renderer_name ) {}
+
+    void update( kvs::MouseEvent* event )
+    {
+//        Object* object = static_cast<Object*>( screen()->objectManager()->object( m_object_name ) );
+//        Renderer* renderer = static_cast<Renderer*>( screen()->rendererManager()->renderer( m_renderer_name ) );
+//        Object* object = kvsoceanvis::util::Event::GetObject<Object>( screen(), m_object_name );
+//        Renderer* renderer = kvsoceanvis::util::Event::GetRenderer<Renderer>( screen(), m_renderer_name );
+        Object* object = static_cast<Object*>( scene()->object( m_object_name ) );
+        Renderer* renderer = static_cast<Renderer*>( scene()->renderer( m_renderer_name ) );
+        if ( !object || !renderer ) return;
+
+/*
+        const int X_min = renderer->xmin();
+        const int X_max = renderer->xmax();
+*/
+        const int X_min = renderer->leftMargin();
+        const int X_max = screen()->width() - renderer->rightMargin();
+
+        const size_t naxes = object->numberOfColumns();
+        const float stride = float( X_max - X_min ) / ( naxes - 1 );
+        for ( size_t i = 0; i < naxes; i++ )
+        {
+            const float ex = static_cast<float>( event->x() );
+            const float x = renderer->leftMargin() + stride * i;
+            if ( x - 5 < ex && ex < x + 5 ) { object->resetRange( i ); return; }
+        }
+
+        object->resetRange();
+
+        m_parameter.SettingRange = false;
+        m_parameter.MovingRange = false;
+
+        screen()->redraw();
+    }
+};
+
+template <typename Object, typename Renderer>
+class MouseRelease : public kvs::MouseReleaseEventListener
+{
+private:
+
+    Parameter& m_parameter;
+    std::string m_object_name;
+    std::string m_renderer_name;
+
+public:
+
+    MouseRelease( Parameter& parameter, std::string object_name, std::string renderer_name ):
+        m_parameter( parameter ),
+        m_object_name( object_name ),
+        m_renderer_name( renderer_name ) {}
+
+    void update( kvs::MouseEvent* event )
+    {
+        m_parameter.SettingRange = false;
+        m_parameter.MovingRange = false;
+    }
+};
+
+template <typename Object, typename Renderer>
+class MouseMove : public kvs::MouseMoveEventListener
+{
+private:
+
+    Parameter& m_parameter;
+    std::string m_object_name;
+    std::string m_renderer_name;
+
+public:
+
+    MouseMove( Parameter& parameter, std::string object_name, std::string renderer_name ):
+        m_parameter( parameter ),
+        m_object_name( object_name ),
+        m_renderer_name( renderer_name ) {}
+
+    void update( kvs::MouseEvent* event )
+    {
+//        Object* object = static_cast<Object*>( screen()->objectManager()->object( m_object_name ) );
+//        Renderer* renderer = static_cast<Renderer*>( screen()->rendererManager()->renderer( m_renderer_name ) );
+//        Object* object = kvsoceanvis::util::Event::GetObject<Object>( screen(), m_object_name );
+//        Renderer* renderer = kvsoceanvis::util::Event::GetRenderer<Renderer>( screen(), m_renderer_name );
+        Object* object = static_cast<Object*>( scene()->object( m_object_name ) );
+        Renderer* renderer = static_cast<Renderer*>( scene()->renderer( m_renderer_name ) );
+        if ( !object || !renderer ) return;
+
+        m_parameter.X1 = event->x();
+        m_parameter.Y1 = screen()->height() - event->y();
+
+/*
+        const int Y_min = screen()->height() - renderer->ymax();
+        const int Y_max = screen()->height() - renderer->ymin();
+*/
+        const int Y_min = renderer->bottomMargin();
+        const int Y_max = screen()->height() - renderer->topMargin();
+
+        if ( m_parameter.Y1 <= Y_min ) m_parameter.Y1 = Y_min;
+        if ( m_parameter.Y1 >= Y_max ) m_parameter.Y1 = Y_max;
+
+        const int axis = m_parameter.SelectedAxis;
+        const kvs::Real64 y_min = object->minValue( axis );
+        const kvs::Real64 y_max = object->maxValue( axis );
+
+        if ( m_parameter.SettingRange )
+        {
+            const int Y_rect_min = kvs::Math::Min( m_parameter.Y0, m_parameter.Y1 );
+            const int Y_rect_max = kvs::Math::Max( m_parameter.Y0, m_parameter.Y1 );
+
+            const kvs::Real64 y_rect_min = y_min + ( y_max - y_min ) * ( Y_rect_min - Y_min ) / ( Y_max - Y_min );
+            const kvs::Real64 y_rect_max = y_min + ( y_max - y_min ) * ( Y_rect_max - Y_min ) / ( Y_max - Y_min );
+
+            object->setMinRange( axis, y_rect_min );
+            object->setMaxRange( axis, y_rect_max );
+        }
+
+        if ( m_parameter.MovingRange )
+        {
+            const int Y_delta = m_parameter.Y1 - m_parameter.pY;
+            const kvs::Real64 y_delta = ( y_max - y_min ) * Y_delta / ( Y_max - Y_min );
+
+            object->moveRange( axis, y_delta );
+
+            m_parameter.pX = m_parameter.X1;
+            m_parameter.pY = m_parameter.Y1;
+        }
+    }
+};
+
+template <typename Object, typename Renderer>
+class Paint : public kvs::PaintEventListener
+{
+private:
+
+    Parameter& m_parameter;
+    std::string m_object_name;
+    std::string m_renderer_name;
+
+public:
+
+    Paint( Parameter& parameter, std::string object_name, std::string renderer_name ):
+        m_parameter( parameter ),
+        m_object_name( object_name ),
+        m_renderer_name( renderer_name ) {}
+
+    void update( void )
+    {
+//        Object* object = static_cast<Object*>( screen()->objectManager()->object( m_object_name ) );
+//        Renderer* renderer = static_cast<Renderer*>( screen()->rendererManager()->renderer( m_renderer_name ) );
+//        Object* object = kvsoceanvis::util::Event::GetObject<Object>( screen(), m_object_name );
+//        Renderer* renderer = kvsoceanvis::util::Event::GetRenderer<Renderer>( screen(), m_renderer_name );
+        Object* object = static_cast<Object*>( scene()->object( m_object_name ) );
+        Renderer* renderer = static_cast<Renderer*>( scene()->renderer( m_renderer_name ) );
+        if ( !object || !renderer ) return;
+
+        GLint vp[4]; glGetIntegerv( GL_VIEWPORT, vp );
+        const GLint left = vp[0];
+        const GLint bottom = vp[1];
+        const GLint right = vp[2];
+        const GLint top = vp[3];
+
+        glPushAttrib( GL_ALL_ATTRIB_BITS );
+        glMatrixMode( GL_MODELVIEW );  glPushMatrix(); glLoadIdentity();
+        glMatrixMode( GL_PROJECTION ); glPushMatrix(); glLoadIdentity();
+        glOrtho( left, right, top, bottom, -1, 1 ); // The origin is upper-left.
+        glDisable( GL_DEPTH_TEST );
+
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+        const int X_min = renderer->leftMargin();
+        const int X_max = screen()->width() - renderer->rightMargin();
+        const int Y_min = renderer->topMargin();
+        const int Y_max = screen()->height() - renderer->bottomMargin();
+
+        const int naxes = object->numberOfColumns();
+        const float stride = float( X_max - X_min ) / ( naxes - 1 );
+        for ( int i = 0; i < naxes; i++ )
+        {
+            const float X = renderer->leftMargin() + stride * i;
+
+            const kvs::Real64 y_min_range = object->minRange(i);
+            const kvs::Real64 y_max_range = object->maxRange(i);
+            const kvs::Real64 y_min_value = object->minValue(i);
+            const kvs::Real64 y_max_value = object->maxValue(i);
+
+            const float Y_min_range = Y_max - ( Y_max - Y_min ) * ( y_max_range - y_min_value ) / ( y_max_value - y_min_value );
+            const float Y_max_range = Y_max - ( Y_max - Y_min ) * ( y_min_range - y_min_value ) / ( y_max_value - y_min_value );
+
+            glBegin( GL_QUADS );
+            glColor4ub( 128, 128, 128, 80 );
+            glVertex2f( X - 10, Y_min_range );
+            glVertex2f( X + 10, Y_min_range );
+            glVertex2f( X + 10, Y_max_range );
+            glVertex2f( X - 10, Y_max_range );
+            glEnd();
+
+            glLineWidth( 2.0f );
+            glBegin( GL_LINE_LOOP );
+            glColor3ub( 128, 128, 128 );
+            glVertex2f( X - 10, Y_min_range );
+            glVertex2f( X + 10, Y_min_range );
+            glVertex2f( X + 10, Y_max_range );
+            glVertex2f( X - 10, Y_max_range );
+            glEnd();
+        }
+
+        glPopMatrix();
+        glMatrixMode( GL_MODELVIEW );
+        glPopMatrix();
+        glPopAttrib();
+    }
+};
+
+} // end of namesapce Event
+
+} // end of namesapce util
+
+} // end of namespace kvsoceanvis
+
+#endif // KVSOCEANVIS__UTIL__EVENT_H_INCLUDE

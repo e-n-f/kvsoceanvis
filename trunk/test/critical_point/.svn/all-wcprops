@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/333/trunk/test/critical_point
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/333/trunk/test/critical_point/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/301/trunk/test/critical_point/kvsmake.conf
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/301/trunk/test/critical_point/kvsmake.vc.conf
+END

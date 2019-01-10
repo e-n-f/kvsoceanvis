@@ -1,0 +1,123 @@
+/*****************************************************************************/
+/**
+ *  @file   ClusterMapObject.h
+ *  @author Naohisa Sakamoto
+ */
+/*----------------------------------------------------------------------------
+ *
+ *  Copyright (c) Visualization Laboratory, Kyoto University.
+ *  All rights reserved.
+ *  See http://www.viz.media.kyoto-u.ac.jp/kvs/copyright/ for details.
+ *
+ *  $Id: ClusterMapObject.h 326 2012-12-22 06:19:41Z naohisa.sakamoto $
+ */
+/*****************************************************************************/
+#ifndef KVSOCEANVIS__PCS__CLUSTER_MAP_OBJECT_H_INCLUDE
+#define KVSOCEANVIS__PCS__CLUSTER_MAP_OBJECT_H_INCLUDE
+
+#include <map>
+#include <list>
+#include <numeric>
+#include <kvs/ClassName>
+#include <kvs/Module>
+//#include <kvs/ObjectBase>
+#include <kvs/TableObject>
+#include <kvs/ValueArray>
+
+
+namespace kvsoceanvis
+{
+
+namespace pcs
+{
+
+/*===========================================================================*/
+/**
+ *  @brief  Cluster mapped object class.
+ */
+/*===========================================================================*/
+class ClusterMapObject : public kvs::TableObject
+{
+    // Class name.
+    kvsClassName( kvsoceanvis::pcs::ClusterMapObject );
+
+    // Module information.
+    kvsModuleCategory( Object );
+    kvsModuleBaseClass( kvs::TableObject );
+
+public:
+
+    class Cluster;
+    typedef std::list<Cluster> ClusterList;
+
+protected:
+//private:
+
+    ClusterList m_cluster_list; ///< cluster list
+    size_t m_naxes; ///< number of axes (columns)
+    size_t m_npoints; ///< number of sampling points (rows)
+
+public:
+
+    ClusterMapObject();
+
+public:
+
+    const ClusterList& clusterList() const;
+    size_t nclusters() const;
+    size_t naxes() const;
+    size_t npoints() const;
+    ObjectType objectType() const;
+
+    void setMinRange( const size_t column_index, const kvs::Real64 range );
+    void setMaxRange( const size_t column_index, const kvs::Real64 range );
+    void setRange( const size_t column_index, const kvs::Real64 min_range, const kvs::Real64 max_range );
+    void moveMinRange( const size_t column_index, const kvs::Real64 drange );
+    void moveMaxRange( const size_t column_index, const kvs::Real64 drange );
+    void moveRange( const size_t column_index, const kvs::Real64 drange );
+    void resetRange( const size_t column_index );
+    void resetRange();
+    void addCluster( const Cluster& cluster );
+    void sortClusters();
+};
+
+/*===========================================================================*/
+/**
+ *  @brief  Cluster class for constructing the cluster map object.
+ */
+/*===========================================================================*/
+class ClusterMapObject::Cluster
+{
+protected:
+
+    size_t m_id; ///< cluster ID
+    size_t m_counter; ///< counter for the points within the cluster
+    kvs::ValueArray<kvs::Real64> m_min_values; ///< min. values for each axis
+    kvs::ValueArray<kvs::Real64> m_max_values; ///< max. values for each axis
+
+public:
+
+    Cluster();
+
+public:
+
+    void setID( const size_t id );
+    void setCounter( const size_t counter );
+    void setMinValues( const kvs::ValueArray<kvs::Real64>& min_values );
+    void setMaxValues( const kvs::ValueArray<kvs::Real64>& max_values );
+
+    size_t counter() const;
+    kvs::Real64 minValue( const size_t index ) const;
+    kvs::Real64 maxValue( const size_t index ) const;
+    const kvs::ValueArray<kvs::Real64>& minValues() const;
+    const kvs::ValueArray<kvs::Real64>& maxValues() const;
+
+    friend bool operator < ( const Cluster& c0, const Cluster& c1 );
+    friend bool operator == ( const Cluster& c0, const Cluster& c1 );
+};
+
+} // end of namespace pcs
+
+} // end of namespace kvsoceanvis
+
+#endif // KVSOCEANVIS__PCS__CLUSTER_MAP_OBJECT_H_INCLUDE

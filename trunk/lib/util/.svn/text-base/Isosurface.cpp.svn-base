@@ -1,0 +1,272 @@
+/*****************************************************************************/
+/**
+ *  @file   Isosurface.cpp
+ *  @author Naohisa Sakamoto
+ */
+/*----------------------------------------------------------------------------
+ *
+ *  Copyright (c) Visualization Laboratory, Kyoto University.
+ *  All rights reserved.
+ *  See http://www.viz.media.kyoto-u.ac.jp/kvs/copyright/ for details.
+ *
+ *  $Id$
+ */
+/*****************************************************************************/
+#include "Isosurface.h"
+#include <kvs/MarchingCubesTable>
+
+
+namespace kvsoceanvis
+{
+
+namespace util
+{
+
+Isosurface::Isosurface(
+    const kvs::StructuredVolumeObject* volume,
+    const double                       isolevel,
+    const SuperClass::NormalType       normal_type,
+    const bool                         duplication,
+    const kvs::TransferFunction&       transfer_function ):
+    kvs::MapperBase( transfer_function ),
+    kvs::PolygonObject(),
+    m_isolevel( isolevel ),
+    m_duplication( duplication )
+{
+    SuperClass::setNormalType( normal_type );
+    this->exec( volume );
+}
+
+Isosurface::SuperClass* Isosurface::exec( const kvs::ObjectBase* object )
+{
+    const kvs::StructuredVolumeObject* volume = kvs::StructuredVolumeObject::DownCast( object );
+    const kvs::Real32* xcoords = volume->coords().data();
+    const kvs::Real32* ycoords = xcoords + volume->resolution().x();
+    const kvs::Real32* zcoords = ycoords + volume->resolution().y();
+
+    // Attach the pointer to the volume object.
+    BaseClass::attachVolume( volume );
+    BaseClass::setRange( volume );
+    BaseClass::setMinMaxCoords( volume, this );
+
+    // Calculated the coordinate data array and the normal vector array.
+    std::vector<kvs::Real32> coords;
+    std::vector<kvs::Real32> normals;
+
+    const kvs::Vector3ui ncells( volume->resolution() - kvs::Vector3ui::All(1) );
+    const kvs::UInt32    line_size( volume->numberOfNodesPerLine() );
+    const kvs::UInt32    slice_size( volume->numberOfNodesPerSlice() );
+
+    // Extract surfaces.
+    size_t index = 0;
+    size_t local_index[8];
+    for ( kvs::UInt32 z = 0; z < ncells.z(); ++z )
+    {
+        for ( kvs::UInt32 y = 0; y < ncells.y(); ++y )
+        {
+            for ( kvs::UInt32 x = 0; x < ncells.x(); ++x )
+            {
+                // Calculate the indices of the target cell.
+                local_index[0] = index;
+                local_index[1] = local_index[0] + 1;
+                local_index[2] = local_index[1] + line_size;
+                local_index[3] = local_index[0] + line_size;
+                local_index[4] = local_index[0] + slice_size;
+                local_index[5] = local_index[1] + slice_size;
+                local_index[6] = local_index[2] + slice_size;
+                local_index[7] = local_index[3] + slice_size;
+                index++;
+
+                // Calculate the index of the reference table.
+                const size_t table_index = this->calculate_table_index( local_index );
+                if ( table_index == 0 ) continue;
+                if ( table_index == 255 ) continue;
+
+                const kvs::Real32 x0 = xcoords[x];
+                const kvs::Real32 y0 = ycoords[y];
+                const kvs::Real32 z0 = zcoords[z];
+                const kvs::Real32 xdiff = xcoords[x+1] - xcoords[x];
+                const kvs::Real32 ydiff = ycoords[y+1] - ycoords[y];
+                const kvs::Real32 zdiff = zcoords[z+1] - zcoords[z];
+
+                // Calculate the triangle polygons.
+                for ( size_t i = 0; kvs::MarchingCubesTable::TriangleID[ table_index ][i] != -1; i += 3 )
+                {
+                    // Refer the edge IDs from the TriangleTable by using the table_index.
+                    const int e0 = kvs::MarchingCubesTable::TriangleID[table_index][i];
+                    const int e1 = kvs::MarchingCubesTable::TriangleID[table_index][i+2];
+                    const int e2 = kvs::MarchingCubesTable::TriangleID[table_index][i+1];
+
+                    // Determine vertices for each edge.
+                    const kvs::Vector3f i0(
+                        static_cast<float>( x + kvs::MarchingCubesTable::VertexID[e0][0][0] ),
+                        static_cast<float>( y + kvs::MarchingCubesTable::VertexID[e0][0][1] ),
+                        static_cast<float>( z + kvs::MarchingCubesTable::VertexID[e0][0][2] ) );
+
+                    const kvs::Vector3f i1(
+                        static_cast<float>( x + kvs::MarchingCubesTable::VertexID[e0][1][0] ),
+                        static_cast<float>( y + kvs::MarchingCubesTable::VertexID[e0][1][1] ),
+                        static_cast<float>( z + kvs::MarchingCubesTable::VertexID[e0][1][2] ) );
+
+                    const kvs::Vector3f i2(
+                        static_cast<float>( x + kvs::MarchingCubesTable::VertexID[e1][0][0] ),
+                        static_cast<float>( y + kvs::MarchingCubesTable::VertexID[e1][0][1] ),
+                        static_cast<float>( z + kvs::MarchingCubesTable::VertexID[e1][0][2] ) );
+
+                    const kvs::Vector3f i3(
+                        static_cast<float>( x + kvs::MarchingCubesTable::VertexID[e1][1][0] ),
+                        static_cast<float>( y + kvs::MarchingCubesTable::VertexID[e1][1][1] ),
+                        static_cast<float>( z + kvs::MarchingCubesTable::VertexID[e1][1][2] ) );
+
+                    const kvs::Vector3f i4(
+                        static_cast<float>( x + kvs::MarchingCubesTable::VertexID[e2][0][0] ),
+                        static_cast<float>( y + kvs::MarchingCubesTable::VertexID[e2][0][1] ),
+                        static_cast<float>( z + kvs::MarchingCubesTable::VertexID[e2][0][2] ) );
+
+                    const kvs::Vector3f i5(
+                        static_cast<float>( x + kvs::MarchingCubesTable::VertexID[e2][1][0] ),
+                        static_cast<float>( y + kvs::MarchingCubesTable::VertexID[e2][1][1] ),
+                        static_cast<float>( z + kvs::MarchingCubesTable::VertexID[e2][1][2] ) );
+
+
+                    const kvs::Vector3f v0(
+                        static_cast<float>( x0 + xdiff * kvs::MarchingCubesTable::VertexID[e0][0][0] ),
+                        static_cast<float>( y0 + ydiff * kvs::MarchingCubesTable::VertexID[e0][0][1] ),
+                        static_cast<float>( z0 + zdiff * kvs::MarchingCubesTable::VertexID[e0][0][2] ) );
+
+                    const kvs::Vector3f v1(
+                        static_cast<float>( x0 + xdiff * kvs::MarchingCubesTable::VertexID[e0][1][0] ),
+                        static_cast<float>( y0 + ydiff * kvs::MarchingCubesTable::VertexID[e0][1][1] ),
+                        static_cast<float>( z0 + zdiff * kvs::MarchingCubesTable::VertexID[e0][1][2] ) );
+
+                    const kvs::Vector3f v2(
+                        static_cast<float>( x0 + xdiff * kvs::MarchingCubesTable::VertexID[e1][0][0] ),
+                        static_cast<float>( y0 + ydiff * kvs::MarchingCubesTable::VertexID[e1][0][1] ),
+                        static_cast<float>( z0 + zdiff * kvs::MarchingCubesTable::VertexID[e1][0][2] ) );
+
+                    const kvs::Vector3f v3(
+                        static_cast<float>( x0 + xdiff * kvs::MarchingCubesTable::VertexID[e1][1][0] ),
+                        static_cast<float>( y0 + ydiff * kvs::MarchingCubesTable::VertexID[e1][1][1] ),
+                        static_cast<float>( z0 + zdiff * kvs::MarchingCubesTable::VertexID[e1][1][2] ) );
+
+                    const kvs::Vector3f v4(
+                        static_cast<float>( x0 + xdiff * kvs::MarchingCubesTable::VertexID[e2][0][0] ),
+                        static_cast<float>( y0 + ydiff * kvs::MarchingCubesTable::VertexID[e2][0][1] ),
+                        static_cast<float>( z0 + zdiff * kvs::MarchingCubesTable::VertexID[e2][0][2] ) );
+
+                    const kvs::Vector3f v5(
+                        static_cast<float>( x0 + xdiff * kvs::MarchingCubesTable::VertexID[e2][1][0] ),
+                        static_cast<float>( y0 + ydiff * kvs::MarchingCubesTable::VertexID[e2][1][1] ),
+                        static_cast<float>( z0 + zdiff * kvs::MarchingCubesTable::VertexID[e2][1][2] ) );
+
+                    // Calculate coordinates of the vertices which are composed
+                    // of the triangle polygon.
+                    const kvs::Vector3f vertex0( this->interpolate_vertex( i0, i1, v0, v1 ) );
+                    coords.push_back( vertex0.x() );
+                    coords.push_back( vertex0.y() );
+                    coords.push_back( vertex0.z() );
+
+                    const kvs::Vector3f vertex1( this->interpolate_vertex( i2, i3, v2, v3 ) );
+                    coords.push_back( vertex1.x() );
+                    coords.push_back( vertex1.y() );
+                    coords.push_back( vertex1.z() );
+
+                    const kvs::Vector3f vertex2( this->interpolate_vertex( i4, i5, v4, v5 ) );
+                    coords.push_back( vertex2.x() );
+                    coords.push_back( vertex2.y() );
+                    coords.push_back( vertex2.z() );
+
+                    // Calculate a normal vector for the triangle polygon.
+                    const kvs::Vector3f normal( ( vertex1 - vertex0 ).cross( vertex2 - vertex0 ) );
+                    normals.push_back( normal.x() );
+                    normals.push_back( normal.y() );
+                    normals.push_back( normal.z() );
+                } // end of loop-triangle
+            } // end of loop-x
+            ++index;
+        } // end of loop-y
+        index += line_size;
+    } // end of loop-z
+
+    // Calculate the polygon color for the isolevel.
+    const kvs::RGBColor color = this->calculate_color();
+
+    SuperClass::setCoords( kvs::ValueArray<kvs::Real32>( coords ) );
+    SuperClass::setColor( color );
+    SuperClass::setNormals( kvs::ValueArray<kvs::Real32>( normals ) );
+    SuperClass::setOpacity( 255 );
+    SuperClass::setPolygonType( kvs::PolygonObject::Triangle );
+    SuperClass::setColorType( kvs::PolygonObject::PolygonColor );
+    SuperClass::setNormalType( kvs::PolygonObject::PolygonNormal );
+
+    return this;
+}
+
+const size_t Isosurface::calculate_table_index( const size_t* local_index ) const
+{
+    const kvs::Real32* const values = static_cast<const kvs::Real32*>( BaseClass::volume()->values().data() );
+    const double isolevel = m_isolevel;
+
+    size_t table_index = 0;
+    if ( static_cast<double>( values[ local_index[0] ] ) > isolevel ) { table_index |=   1; }
+    if ( static_cast<double>( values[ local_index[1] ] ) > isolevel ) { table_index |=   2; }
+    if ( static_cast<double>( values[ local_index[2] ] ) > isolevel ) { table_index |=   4; }
+    if ( static_cast<double>( values[ local_index[3] ] ) > isolevel ) { table_index |=   8; }
+    if ( static_cast<double>( values[ local_index[4] ] ) > isolevel ) { table_index |=  16; }
+    if ( static_cast<double>( values[ local_index[5] ] ) > isolevel ) { table_index |=  32; }
+    if ( static_cast<double>( values[ local_index[6] ] ) > isolevel ) { table_index |=  64; }
+    if ( static_cast<double>( values[ local_index[7] ] ) > isolevel ) { table_index |= 128; }
+
+    return( table_index );
+}
+
+const kvs::Vector3f Isosurface::interpolate_vertex(
+    const kvs::Vector3f& index0,
+    const kvs::Vector3f& index1,
+    const kvs::Vector3f& vertex0,
+    const kvs::Vector3f& vertex1 ) const
+{
+    const kvs::Real32* const values = static_cast<const kvs::Real32*>( BaseClass::volume()->values().data() );
+    const kvs::StructuredVolumeObject* volume = kvs::StructuredVolumeObject::DownCast( BaseClass::volume() );
+
+    const double x0 = index0.x();
+    const double y0 = index0.y();
+    const double z0 = index0.z();
+    const double x1 = index1.x();
+    const double y1 = index1.y();
+    const double z1 = index1.z();
+    const kvs::UInt32 line_size  = volume->numberOfNodesPerLine();
+    const kvs::UInt32 slice_size = volume->numberOfNodesPerSlice();
+    const size_t v0_index = static_cast<size_t>( x0 + y0 * line_size + z0 * slice_size );
+    const size_t v1_index = static_cast<size_t>( x1 + y1 * line_size + z1 * slice_size );
+
+    const double v0 = static_cast<double>( values[ v0_index ] );
+    const double v1 = static_cast<double>( values[ v1_index ] );
+    const float ratio = static_cast<float>( kvs::Math::Abs( ( m_isolevel - v0 ) / ( v1 - v0 ) ) );
+
+    const float x = ( 1.0f - ratio ) * vertex0.x() + ratio * vertex1.x();
+    const float y = ( 1.0f - ratio ) * vertex0.y() + ratio * vertex1.y();
+    const float z = ( 1.0f - ratio ) * vertex0.z() + ratio * vertex1.z();
+
+    return( kvs::Vector3f( x, y, z ) );
+}
+
+const kvs::RGBColor Isosurface::calculate_color( void )
+{
+    // Calculate the min/max values of the node data.
+    if ( !BaseClass::volume()->hasMinMaxValues() )
+    {
+        BaseClass::volume()->updateMinMaxValues();
+    }
+
+    const kvs::Real64 min_value = BaseClass::volume()->minValue();
+    const kvs::Real64 max_value = BaseClass::volume()->maxValue();
+    const kvs::Real64 normalize_factor = 255.0 / ( max_value - min_value );
+    const kvs::UInt8  index = static_cast<kvs::UInt8>( normalize_factor * ( m_isolevel - min_value ) );
+
+    return( BaseClass::transferFunction().colorMap()[ index ] );
+}
+
+} // end of namespace util
+
+} // end of namespace kvsoceanvis

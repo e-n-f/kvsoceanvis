@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/333/trunk/test/ortho_slice
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/301/trunk/test/ortho_slice/kvsmake.vc.conf
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/333/trunk/test/ortho_slice/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/301/trunk/test/ortho_slice/kvsmake.conf
+END

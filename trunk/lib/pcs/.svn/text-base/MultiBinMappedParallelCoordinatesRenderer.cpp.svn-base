@@ -1,0 +1,404 @@
+/*****************************************************************************/
+/**
+ *  @file   MultiBinMappedParallelCoordinatesRenderer.cpp
+ *  @author Naohisa Sakamoto
+ */
+/*----------------------------------------------------------------------------
+ *
+ *  Copyright (c) Visualization Laboratory, Kyoto University.
+ *  All rights reserved.
+ *  See http://www.viz.media.kyoto-u.ac.jp/kvs/copyright/ for details.
+ *
+ *  $Id$
+ */
+/*****************************************************************************/
+#include "MultiBinMappedParallelCoordinatesRenderer.h"
+#include <kvs/OpenGL>
+#include <kvs/Camera>
+#include <kvs/Light>
+#include <kvs/ObjectBase>
+#include <kvs/AnyValueArray>
+#include <kvs/Math>
+#include "MultiBinMapObject.h"
+
+
+namespace
+{
+
+void BeginDraw()
+{
+    GLint vp[4]; glGetIntegerv( GL_VIEWPORT, vp );
+    const GLint left = vp[0];
+    const GLint bottom = vp[1];
+    const GLint right = vp[2];
+    const GLint top = vp[3];
+
+    glPushAttrib( GL_ALL_ATTRIB_BITS );
+    glMatrixMode( GL_MODELVIEW );  glPushMatrix(); glLoadIdentity();
+    glMatrixMode( GL_PROJECTION ); glPushMatrix(); glLoadIdentity();
+    glOrtho( left, right, top, bottom, -1, 1 ); // The origin is upper-left.
+    glDisable( GL_DEPTH_TEST );
+}
+
+void EndDraw()
+{
+    glPopMatrix();
+    glMatrixMode( GL_MODELVIEW );
+    glPopMatrix();
+    glPopAttrib();
+}
+
+} // end of namespace
+
+
+namespace kvsoceanvis
+{
+
+namespace pcs
+{
+
+/*===========================================================================*/
+/**
+ *  @brief  Constructs a new MultiBinMappedParallelCoordinatesRenderer class.
+ */
+/*===========================================================================*/
+MultiBinMappedParallelCoordinatesRenderer::MultiBinMappedParallelCoordinatesRenderer():
+    m_top_margin( 20 ),
+    m_bottom_margin( 20 ),
+    m_left_margin( 30 ),
+    m_right_margin( 30 ),
+    m_enable_anti_aliasing( false ),
+    m_enable_multisample_anti_aliasing( false ),
+    m_active_axis( 0 ),
+    m_bin_opacity( 255 ),
+    m_bin_edge_width( 0.0f ),
+    m_color_map( 256 )
+{
+    m_color_map.create();
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Sets top margin.
+ *  @param  top_margin [in] margin
+ */
+/*===========================================================================*/
+void MultiBinMappedParallelCoordinatesRenderer::setTopMargin( const int top_margin )
+{
+    m_top_margin = top_margin;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Sets bottom margin.
+ *  @param  bottom_margin [in] margin
+ */
+/*===========================================================================*/
+void MultiBinMappedParallelCoordinatesRenderer::setBottomMargin( const int bottom_margin )
+{
+    m_bottom_margin = bottom_margin;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Sets left margin.
+ *  @param  left_margin [in] left margin
+ */
+/*===========================================================================*/
+void MultiBinMappedParallelCoordinatesRenderer::setLeftMargin( const int left_margin )
+{
+    m_left_margin = left_margin;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Sets right margin.
+ *  @param  right_margin [in] right margin
+ */
+/*===========================================================================*/
+void MultiBinMappedParallelCoordinatesRenderer::setRightMargin( const int right_margin )
+{
+    m_right_margin = right_margin;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Enables anti-aliasing mode.
+ *  @param  multisample [in] if true, multisampling is available
+ */
+/*===========================================================================*/
+void MultiBinMappedParallelCoordinatesRenderer::enableAntiAliasing( const bool multisample ) const
+{
+    m_enable_anti_aliasing = true;
+    m_enable_multisample_anti_aliasing = multisample;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Disables anti-aliasing mode.
+ */
+/*===========================================================================*/
+void MultiBinMappedParallelCoordinatesRenderer::disableAntiAliasing() const
+{
+    m_enable_anti_aliasing = false;
+    m_enable_multisample_anti_aliasing = false;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Sets bin opacity.
+ *  @param  opacity [in] opacity
+ */
+/*===========================================================================*/
+void MultiBinMappedParallelCoordinatesRenderer::setBinOpacity( const kvs::UInt8 opacity )
+{
+    m_bin_opacity = opacity;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Sets bin edge width.
+ *  @param  width [in] line width
+ */
+/*===========================================================================*/
+void MultiBinMappedParallelCoordinatesRenderer::setBinEdgeWidth( const kvs::Real32 width )
+{
+    m_bin_edge_width = width;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Sets color map.
+ *  @param  color_map [in] color map
+ */
+/*===========================================================================*/
+void MultiBinMappedParallelCoordinatesRenderer::setColorMap( const kvs::ColorMap& color_map )
+{
+    m_color_map = color_map;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Selects axis.
+ *  @param  index [in] index of axis
+ */
+/*===========================================================================*/
+void MultiBinMappedParallelCoordinatesRenderer::selectAxis( const size_t index )
+{
+    m_active_axis = index;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Returns top margin.
+ *  @return top margin
+ */
+/*===========================================================================*/
+int MultiBinMappedParallelCoordinatesRenderer::topMargin() const
+{
+    return m_top_margin;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Returns bottom margin.
+ *  @return bottom margin
+ */
+/*===========================================================================*/
+int MultiBinMappedParallelCoordinatesRenderer::bottomMargin() const
+{
+    return m_bottom_margin;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Returns left margin.
+ *  @return left margin
+ */
+/*===========================================================================*/
+int MultiBinMappedParallelCoordinatesRenderer::leftMargin() const
+{
+    return m_left_margin;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Returns right margin.
+ *  @return right margin
+ */
+/*===========================================================================*/
+int MultiBinMappedParallelCoordinatesRenderer::rightMargin() const
+{
+    return m_right_margin;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Returns index of active axis.
+ *  @return index of active axis
+ */
+/*===========================================================================*/
+size_t MultiBinMappedParallelCoordinatesRenderer::activeAxis() const
+{
+    return m_active_axis;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Returns bin opacity.
+ *  @return bin opacity
+ */
+/*===========================================================================*/
+kvs::UInt8 MultiBinMappedParallelCoordinatesRenderer::binOpacity() const
+{
+    return m_bin_opacity;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Returns bin edge width.
+ *  @return bin edge width
+ */
+/*===========================================================================*/
+kvs::Real32 MultiBinMappedParallelCoordinatesRenderer::binEdgeWidth() const
+{
+    return m_bin_edge_width;
+}
+
+/*===========================================================================*/
+/**
+ *  @brief  Render multi bin mapped parallel coordinates.
+ *  @param  object [in] pointer to object
+ *  @param  camera [in] pointer to camera
+ *  @param  light [in] pointer to light
+ */
+/*===========================================================================*/
+void MultiBinMappedParallelCoordinatesRenderer::exec( kvs::ObjectBase* object, kvs::Camera* camera, kvs::Light* light )
+{
+    kvs::IgnoreUnusedVariable( light );
+
+    pcs::MultiBinMapObject* bin_map_object = reinterpret_cast<pcs::MultiBinMapObject*>( object );
+
+    glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+
+    // Anti-aliasing.
+    if ( m_enable_anti_aliasing )
+    {
+#if defined ( GL_MULTISAMPLE )
+        if ( m_enable_multisample_anti_aliasing )
+        {
+            GLint buffers = 0;
+            GLint samples = 0;
+            glGetIntegerv( GL_SAMPLE_BUFFERS, &buffers );
+            glGetIntegerv( GL_SAMPLES, &samples );
+            if ( buffers > 0 && samples > 1 ) glEnable( GL_MULTISAMPLE );
+        }
+        else
+#endif
+        {
+            glEnable( GL_LINE_SMOOTH );
+            glHint( GL_LINE_SMOOTH_HINT, GL_NICEST );
+        }
+    }
+
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+    ::BeginDraw();
+
+    const kvs::Real64 color_axis_min_value = 0.0;
+    const kvs::Real64 color_axis_max_value = bin_map_object->nbins().at( m_active_axis ) - 1;
+    m_color_map.setRange( color_axis_min_value, color_axis_max_value );
+
+    const int x0 = m_left_margin;
+    const int x1 = camera->windowWidth() - m_right_margin;
+    const int y0 = m_top_margin;
+    const int y1 = camera->windowHeight() - m_bottom_margin;
+
+    const size_t naxes = bin_map_object->naxes();
+    const float stride = float( x1 - x0 ) / ( naxes - 1 );
+
+    GLfloat* vertex = new GLfloat [ naxes * 4 ];
+    pcs::MultiBinMapObject::BinList::const_iterator bin = bin_map_object->binList().begin();
+    pcs::MultiBinMapObject::BinList::const_iterator last = bin_map_object->binList().end();
+    while ( bin != last )
+    {
+        const kvs::ValueArray<kvs::UInt16>& indices = bin->indices();
+        const kvs::RGBColor color = m_color_map.at( indices[m_active_axis] );
+
+        bool draw = true;
+        for ( size_t i = 0; i < naxes; i++ )
+        {
+            const size_t nbins = bin_map_object->nbins().at(i);
+            const size_t index = indices[i];
+
+            const kvs::Real64 y_min_value = bin_map_object->minValue(i);
+            const kvs::Real64 y_max_value = bin_map_object->maxValue(i);
+            const kvs::Real64 y_min_range = bin_map_object->minRange(i);
+            const kvs::Real64 y_max_range = bin_map_object->maxRange(i);
+            const kvs::Real64 bin_width = ( y_max_value - y_min_value ) / nbins;
+            if ( y_max_range < y_min_value + bin_width * ( index + 1 ) ||
+                 y_min_range > y_min_value + bin_width * ( index + 0 ) )
+            {
+                draw = false;
+                break;
+            }
+
+            const float x = m_left_margin + stride * i;
+            const float width = float( y1 - y0 ) / nbins;
+            const float ya = y1 - width * indices[i];
+            const float yb = ya - width;
+            vertex[ 4 * i + 0 ] = x;
+            vertex[ 4 * i + 1 ] = ya;
+            vertex[ 4 * i + 2 ] = x;
+            vertex[ 4 * i + 3 ] = yb;
+        }
+
+        if ( draw )
+        {
+            glBegin( GL_QUAD_STRIP );
+            glColor4ub( color.r(), color.g(), color.b(), m_bin_opacity );
+            const size_t naxes = indices.size();
+            for ( size_t i = 0; i < naxes; i++ )
+            {
+                glVertex2fv( vertex + 4 * i );
+                glVertex2fv( vertex + 4 * i + 2 );
+            }
+            glEnd();
+        }
+
+        if ( draw )
+        {
+            if ( m_bin_edge_width > 0.0f )
+            {
+                glLineWidth( m_bin_edge_width );
+                const size_t naxes = indices.size();
+                for ( size_t i = 0; i < naxes - 1; i++ )
+                {
+                    const GLubyte r = color.r() * 0.8 + 0.5;
+                    const GLubyte g = color.g() * 0.8 + 0.5;
+                    const GLubyte b = color.b() * 0.8 + 0.5;
+                    const GLubyte a = m_bin_opacity;
+                    glBegin( GL_LINE_LOOP );
+                    glColor4ub( r, g, b, a );
+                    glVertex2f( vertex[4*i+0], vertex[4*i+1] );
+                    glVertex2f( vertex[4*i+2], vertex[4*i+3] );
+                    glVertex2f( vertex[4*i+6], vertex[4*i+7] );
+                    glVertex2f( vertex[4*i+4], vertex[4*i+5] );
+                    glEnd();
+                }
+            }
+        }
+
+        bin++;
+    }
+    delete [] vertex;
+
+    ::EndDraw();
+
+    glPopAttrib();
+}
+
+} // end of namespace pcs
+
+} // end of namespace kvsoceanvis

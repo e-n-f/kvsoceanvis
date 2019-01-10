@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/svn/!svn/ver/344/trunk/app/DataBase
+END
+CPUEData.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/337/trunk/app/DataBase/CPUEData.cpp
+END
+kvsmake.qt.conf
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/344/trunk/app/DataBase/kvsmake.qt.conf
+END
+CPUEData.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/336/trunk/app/DataBase/CPUEData.h
+END
+Database.pro
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/343/trunk/app/DataBase/Database.pro
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/337/trunk/app/DataBase/main.cpp
+END

@@ -1,0 +1,104 @@
+/*****************************************************************************/
+/**
+ *  @file   MultiBinMapObject.h
+ *  @author Naohisa Sakamoto
+ */
+/*----------------------------------------------------------------------------
+ *
+ *  Copyright (c) Visualization Laboratory, Kyoto University.
+ *  All rights reserved.
+ *  See http://www.viz.media.kyoto-u.ac.jp/kvs/copyright/ for details.
+ *
+ *  $Id$
+ */
+/*****************************************************************************/
+#ifndef KVSOCEANVIS__PCS__MULTI_BIN_MAP_OBJECT_H_INCLUDE
+#define KVSOCEANVIS__PCS__MULTI_BIN_MAP_OBJECT_H_INCLUDE
+
+#include <map>
+#include <list>
+#include <numeric>
+#include <kvs/Module>
+#include <kvs/ObjectBase>
+#include <kvs/ValueArray>
+#include <kvs/TableObject>
+
+
+namespace kvsoceanvis
+{
+
+namespace pcs
+{
+
+/*===========================================================================*/
+/**
+ *  @brief  Multiple binned map object class.
+ */
+/*===========================================================================*/
+class MultiBinMapObject : public kvs::TableObject
+{
+    kvsModuleName( kvsoceanvis::pcs::MultiBinMapObject );
+    kvsModuleCategory( Object );
+    kvsModuleBaseClass( kvs::TableObject );
+
+public:
+
+    class Bin;
+    typedef std::list<Bin> BinList;
+
+protected:
+
+    size_t m_npoints; ///< number of points
+    BinList m_bin_list; ///< bin list
+    kvs::ValueArray<kvs::UInt32> m_nbins; ///< array of the number of bins
+
+public:
+
+    MultiBinMapObject();
+
+public:
+
+    size_t npoints() const;
+    const BinList& binList() const;
+    const kvs::ValueArray<kvs::UInt32>& nbins() const;
+    size_t naxes() const;
+
+    void setMinRange( const size_t column_index, const kvs::Real64 range );
+    void setMaxRange( const size_t column_index, const kvs::Real64 range );
+    void setRange( const size_t column_index, const kvs::Real64 min_range, const kvs::Real64 max_range );
+    void moveMinRange( const size_t column_index, const kvs::Real64 drange );
+    void moveMaxRange( const size_t column_index, const kvs::Real64 drange );
+    void moveRange( const size_t column_index, const kvs::Real64 drange );
+    void resetRange( const size_t column_index );
+    void resetRange();
+    ObjectType objectType() const;
+};
+
+class MultiBinMapObject::Bin
+{
+    friend class MultiBinMapObject;
+
+protected:
+
+    size_t m_counter;
+    kvs::ValueArray<kvs::UInt16> m_indices;
+
+public:
+
+    Bin( const kvs::ValueArray<kvs::UInt16>& indices );
+
+public:
+
+    void count();
+    size_t counter() const;
+    const kvs::ValueArray<kvs::UInt16>& indices() const;
+
+    friend bool operator < ( const Bin& b0, const Bin& b1 );
+    friend bool operator == ( const Bin& b0, const Bin& b1 );
+};
+
+} // end of namespace pcs
+
+} // end of namespace kvsoceanvis
+
+#endif // KVSOCEANVIS__PCS__MULTI_BIN_MAP_OBJECT_H_INCLUDE

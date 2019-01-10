@@ -1,0 +1,70 @@
+/*****************************************************************************/
+/**
+ *  @file   BinMapObject.h
+ *  @author Naohisa Sakamoto
+ */
+/*----------------------------------------------------------------------------
+ *
+ *  Copyright (c) Visualization Laboratory, Kyoto University.
+ *  All rights reserved.
+ *  See http://www.viz.media.kyoto-u.ac.jp/kvs/copyright/ for details.
+ *
+ *  $Id$
+ */
+/*****************************************************************************/
+#ifndef KVSOCEANVIS__PCS__BIN_MAP_OBJECT_H_INCLUDE
+#define KVSOCEANVIS__PCS__BIN_MAP_OBJECT_H_INCLUDE
+
+#include <vector>
+#include <kvs/Module>
+#include <kvs/ObjectBase>
+#include <kvs/ValueArray>
+#include <kvs/Type>
+
+
+namespace kvsoceanvis
+{
+
+namespace pcs
+{
+
+/*===========================================================================*/
+/**
+ *  @brief  Bin mapped object class.
+ */
+/*===========================================================================*/
+class BinMapObject : public kvs::ObjectBase
+{
+    kvsModuleName( kvsoceanvis::pcs::BinMapObject );
+    kvsModuleCategory( Object );
+    kvsModuleBaseClass( kvs::ObjectBase );
+
+public:
+
+    typedef kvs::ValueArray<kvs::UInt32> BinMap;
+    typedef std::vector<BinMap> BinMapList;
+
+private:
+
+    BinMapList m_bin_maps; ///< number of bin maps
+    kvs::ValueArray<kvs::UInt32> m_nbins; ///< array of the number of bins
+
+public:
+
+    BinMapObject();
+
+public:
+
+    const BinMap& binMap( const size_t index ) const;
+    kvs::UInt32 nbins( const size_t index ) const;
+    size_t nmaps() const;
+    size_t naxes() const;
+    ObjectType objectType() const;
+    void addBinMap( const BinMap& bin_map );
+};
+
+} // end of namespace pcs
+
+} // end of namespace kvsoceanvis
+
+#endif // KVSOCEANVIS__PCS__BIN_MAP_OBJECT_H_INCLUDE

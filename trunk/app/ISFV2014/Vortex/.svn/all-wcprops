@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 43
+/svn/!svn/ver/378/trunk/app/ISFV2014/Vortex
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/375/trunk/app/ISFV2014/Vortex/kvsmake.vc.conf
+END
+run.sh
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/378/trunk/app/ISFV2014/Vortex/run.sh
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/378/trunk/app/ISFV2014/Vortex/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/375/trunk/app/ISFV2014/Vortex/kvsmake.conf
+END

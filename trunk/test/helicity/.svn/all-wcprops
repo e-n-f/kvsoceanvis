@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/345/trunk/test/helicity
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/345/trunk/test/helicity/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/301/trunk/test/helicity/kvsmake.conf
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/301/trunk/test/helicity/kvsmake.vc.conf
+END

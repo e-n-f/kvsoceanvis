@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/320/trunk/app/AsiaSim2012
+END
+Makefile.kvs
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/309/trunk/app/AsiaSim2012/Makefile.kvs
+END
+luautils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/318/trunk/app/AsiaSim2012/luautils.cpp
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/320/trunk/app/AsiaSim2012/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/320/trunk/app/AsiaSim2012/kvsmake.conf
+END
+config.lua
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/319/trunk/app/AsiaSim2012/config.lua
+END
+luautils.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/318/trunk/app/AsiaSim2012/luautils.h
+END

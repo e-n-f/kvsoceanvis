@@ -1,0 +1,220 @@
+/*****************************************************************************/
+/**
+ *  @file   ClusterMapObject.cpp
+ *  @author Naohisa Sakamoto
+ */
+/*----------------------------------------------------------------------------
+ *
+ *  Copyright (c) Visualization Laboratory, Kyoto University.
+ *  All rights reserved.
+ *  See http://www.viz.media.kyoto-u.ac.jp/kvs/copyright/ for details.
+ *
+ *  $Id: ClusterMapObject.cpp 326 2012-12-22 06:19:41Z naohisa.sakamoto $
+ */
+/*****************************************************************************/
+#include "ClusterMapObject.h"
+#include <kvs/Vector3>
+
+
+namespace kvsoceanvis
+{
+
+namespace pcs
+{
+
+ClusterMapObject::ClusterMapObject()
+{
+    m_naxes = 0;
+    m_npoints = 0;
+}
+
+const ClusterMapObject::ClusterList& ClusterMapObject::clusterList() const
+{
+    return m_cluster_list;
+}
+
+size_t ClusterMapObject::nclusters() const
+{
+    return m_cluster_list.size();
+}
+
+size_t ClusterMapObject::naxes() const
+{
+    return m_naxes;
+}
+
+size_t ClusterMapObject::npoints() const
+{
+    return m_npoints;
+}
+
+kvs::ObjectBase::ObjectType ClusterMapObject::objectType() const
+{
+    return kvs::ObjectBase::Table;
+}
+
+void ClusterMapObject::setMinRange( const size_t column_index, const kvs::Real64 range )
+{
+    const kvs::Real64 min_value = this->minValue( column_index );
+//    const kvs::Real64 max_range = m_max_ranges[column_index];
+    const kvs::Real64 max_range = BaseClass::maxRange( column_index );
+
+//    const kvs::Real64 min_range_old = m_min_ranges[column_index];
+    const kvs::Real64 min_range_old = BaseClass::minRange( column_index );
+    const kvs::Real64 min_range_new = kvs::Math::Clamp( range, min_value, max_range );
+
+    if ( kvs::Math::Equal( min_range_old, min_range_new ) ) return;
+//    m_min_ranges[column_index] = min_range_new;
+    BaseClass::setMinRange( column_index, min_range_new );
+}
+
+void ClusterMapObject::setMaxRange( const size_t column_index, const kvs::Real64 range )
+{
+//    const kvs::Real64 min_range = m_min_ranges[column_index];
+    const kvs::Real64 min_range = BaseClass::minRange( column_index );
+    const kvs::Real64 max_value = this->maxValue( column_index );
+
+//    const kvs::Real64 max_range_old = m_max_ranges[column_index];
+    const kvs::Real64 max_range_old = BaseClass::maxRange( column_index );
+    const kvs::Real64 max_range_new = kvs::Math::Clamp( range, min_range, max_value );
+
+    if ( kvs::Math::Equal( max_range_old, max_range_new ) ) return;
+//    m_max_ranges[column_index] = max_range_new;
+    BaseClass::setMaxRange( column_index, max_range_new );
+}
+
+void ClusterMapObject::setRange( const size_t column_index, const kvs::Real64 min_range, const kvs::Real64 max_range )
+{
+    this->setMinRange( column_index, min_range );
+    this->setMaxRange( column_index, max_range );
+}
+
+void ClusterMapObject::moveMinRange( const size_t column_index, const kvs::Real64 drange )
+{
+    const kvs::Real64 min_range = this->minRange( column_index );
+    this->setMinRange( column_index, min_range + drange );
+}
+
+void ClusterMapObject::moveMaxRange( const size_t column_index, const kvs::Real64 drange )
+{
+    const kvs::Real64 max_range = this->maxRange( column_index );
+    this->setMaxRange( column_index, max_range + drange );
+}
+
+void ClusterMapObject::moveRange( const size_t column_index, const kvs::Real64 drange )
+{
+    const kvs::Real64 min_range = this->minRange( column_index );
+    const kvs::Real64 max_range = this->maxRange( column_index );
+    const kvs::Real64 min_value = this->minValue( column_index );
+    const kvs::Real64 max_value = this->maxValue( column_index );
+
+    const kvs::Real64 range_width = max_range - min_range;
+    if ( max_range + drange > max_value )
+    {
+        this->setMinRange( column_index, max_value - range_width );
+        this->setMaxRange( column_index, max_value );
+    }
+    else if ( min_range + drange < min_value )
+    {
+        this->setMinRange( column_index, min_value );
+        this->setMaxRange( column_index, min_value + range_width );
+    }
+    else
+    {
+        this->setMinRange( column_index, min_range + drange );
+        this->setMaxRange( column_index, max_range + drange );
+    }
+}
+
+void ClusterMapObject::resetRange( const size_t column_index )
+{
+    this->setMinRange( column_index, this->minValue(column_index) );
+    this->setMaxRange( column_index, this->maxValue(column_index) );
+}
+
+void ClusterMapObject::resetRange()
+{
+    const size_t naxes = this->naxes();
+    for ( size_t i = 0; i < naxes; i++ )
+    {
+//        m_max_ranges[i] = this->maxValue(i);
+//        m_min_ranges[i] = this->minValue(i);
+        BaseClass::setMaxRange( i, this->maxValue(i) );
+        BaseClass::setMinRange( i, this->minValue(i) );
+    }
+}
+
+void ClusterMapObject::addCluster( const ClusterMapObject::Cluster& cluster )
+{
+    m_cluster_list.push_back( cluster );
+}
+
+void ClusterMapObject::sortClusters()
+{
+    m_cluster_list.sort();
+}
+
+ClusterMapObject::Cluster::Cluster():
+    m_id(0),
+    m_counter(0)
+{
+}
+
+void ClusterMapObject::Cluster::setID( const size_t id )
+{
+    m_id = id;
+}
+
+void ClusterMapObject::Cluster::setCounter( const size_t counter )
+{
+    m_counter = counter;
+}
+
+void ClusterMapObject::Cluster::setMinValues( const kvs::ValueArray<kvs::Real64>& min_values )
+{
+    m_min_values = min_values;
+}
+
+void ClusterMapObject::Cluster::setMaxValues( const kvs::ValueArray<kvs::Real64>& max_values )
+{
+    m_max_values = max_values;
+}
+
+size_t ClusterMapObject::Cluster::counter() const
+{
+    return m_counter;
+}
+
+kvs::Real64 ClusterMapObject::Cluster::minValue( const size_t index ) const
+{
+    return m_min_values[index];
+}
+
+kvs::Real64 ClusterMapObject::Cluster::maxValue( const size_t index ) const
+{
+    return m_max_values[index];
+}
+
+const kvs::ValueArray<kvs::Real64>& ClusterMapObject::Cluster::minValues() const
+{
+    return m_min_values;
+}
+
+const kvs::ValueArray<kvs::Real64>& ClusterMapObject::Cluster::maxValues() const
+{
+    return m_max_values;
+}
+
+bool operator < ( const ClusterMapObject::Cluster& c0, const ClusterMapObject::Cluster& c1 )
+{
+    return c0.counter() < c1.counter();
+}
+
+bool operator == ( const ClusterMapObject::Cluster& c0, const ClusterMapObject::Cluster& c1 )
+{
+    return c0.minValues() == c1.minValues() && c0.maxValues() == c1.maxValues();
+}
+
+} // end of namespace pcs
+
+} // end of namespace kvsoceanvis

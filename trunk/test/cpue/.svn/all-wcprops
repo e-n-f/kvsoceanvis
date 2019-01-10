@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/svn/!svn/ver/326/trunk/test/cpue
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/321/trunk/test/cpue/kvsmake.vc.conf
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/326/trunk/test/cpue/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/321/trunk/test/cpue/kvsmake.conf
+END

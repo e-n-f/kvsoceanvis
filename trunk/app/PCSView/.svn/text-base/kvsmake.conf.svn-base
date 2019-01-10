@@ -1,0 +1,8 @@
+# Linux, Mac
+INCLUDE_PATH := -I../../lib
+LIBRARY_PATH := -L../../lib/pcs
+LINK_LIBRARY := -lpcs ../../lib/util/libutil.a
+# Windows
+#INCLUDE_PATH = /I..\..\lib
+#LIBRARY_PATH = /LIBPATH:..\..\lib\pcs /LIBPATH:..\..\lib\util
+#LINK_LIBRARY = pcs.lib util.lib

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/326/trunk/test/adaptive_kmeans
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/326/trunk/test/adaptive_kmeans/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/325/trunk/test/adaptive_kmeans/kvsmake.conf
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/325/trunk/test/adaptive_kmeans/kvsmake.vc.conf
+END

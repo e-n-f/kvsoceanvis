@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/251/trunk/test/MDSTable
+END
+cblas.h
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/218/trunk/test/MDSTable/cblas.h
+END
+lapacke_config.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/218/trunk/test/MDSTable/lapacke_config.h
+END
+MDSTable.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/241/trunk/test/MDSTable/MDSTable.cpp
+END
+MDSTable.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/217/trunk/test/MDSTable/MDSTable.h
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/241/trunk/test/MDSTable/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/218/trunk/test/MDSTable/kvsmake.conf
+END
+lapacke_utils.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/218/trunk/test/MDSTable/lapacke_utils.h
+END
+lapacke.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/218/trunk/test/MDSTable/lapacke.h
+END

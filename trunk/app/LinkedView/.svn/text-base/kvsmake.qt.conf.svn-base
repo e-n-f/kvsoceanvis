@@ -1,0 +1,4 @@
+INCLUDEPATH += ../../lib
+win32 { LIBS += ../../lib/util/libutil.lib ../../lib/pcs/libpcs.lib }
+macx { LIBS += ../../lib/util/libutil.a ../../lib/pcs/libpcs.a }
+x11 { LIBS += ../../lib/util/libutil.a ../../lib/pcs/libpcs.a }

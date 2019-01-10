@@ -1,0 +1,4 @@
+INCLUDE_PATH := 
+LIBRARY_PATH := -L./
+LINK_LIBRARY := -llapacke -ltmglib -lcblas -llapack -lblas
+INSTALL_DIR := 

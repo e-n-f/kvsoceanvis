@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/343/trunk/app/VisSympo2012/slice
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/304/trunk/app/VisSympo2012/slice/kvsmake.vc.conf
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/343/trunk/app/VisSympo2012/slice/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/304/trunk/app/VisSympo2012/slice/kvsmake.conf
+END

@@ -1,0 +1,16 @@
+SET COMMAND=streamline_with_volume.exe
+
+SET UDATA=Z:\Work\Data\Ocean\MOVE_19800101\U3D_intpo.ctl
+SET VDATA=Z:\Work\Data\Ocean\MOVE_19800101\V3D_intpo.ctl
+SET WDATA=Z:\Work\Data\Ocean\MOVE_19800101\W3D_intpo.ctl
+SET TDATA=Z:\Work\Data\Ocean\MOVE_19800101\T3D_intpo.ctl
+
+SET MINX=250
+SET MINY=100
+SET MINZ=0
+
+SET MAXX=350
+SET MAXY=300
+SET MAXZ=20
+
+%COMMAND% %UDATA% %VDATA% %WDATA% %TDATA% %MINX% %MINY% %MINZ% %MAXX% %MAXY% %MAXZ%

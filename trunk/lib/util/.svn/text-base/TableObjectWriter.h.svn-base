@@ -1,0 +1,46 @@
+/*****************************************************************************/
+/**
+ *  @file   TableObjectWriter.h
+ *  @author Naohisa Sakamoto
+ */
+/*----------------------------------------------------------------------------
+ *
+ *  Copyright (c) Visualization Laboratory, Kyoto University.
+ *  All rights reserved.
+ *  See http://www.viz.media.kyoto-u.ac.jp/kvs/copyright/ for details.
+ *
+ *  $Id$
+ */
+/*****************************************************************************/
+#ifndef KVSOCEANVIS__UTIL__TABLE_OBJECT_WRITER_H_INCLUDE
+#define KVSOCEANVIS__UTIL__TABLE_OBJECT_WRITER_H_INCLUDE
+
+#include <string>
+#include <fstream>
+#include <kvs/TableObject>
+
+
+namespace kvsoceanvis
+{
+
+namespace util
+{
+
+class TableObjectWriter
+{
+protected:
+
+    const kvs::TableObject* m_object;
+
+public:
+
+    TableObjectWriter( const kvs::TableObject* object );
+
+    void write( const std::string filename );
+};
+
+} // end of namespace util
+
+} // end of namespace kvsoceanvis
+
+#endif // KVSOCEANVIS__UTIL__TABLE_OBJECT_WRITER_H_INCLUDE

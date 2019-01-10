@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/333/trunk/test/isosurface
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/333/trunk/test/isosurface/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/301/trunk/test/isosurface/kvsmake.conf
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/301/trunk/test/isosurface/kvsmake.vc.conf
+END

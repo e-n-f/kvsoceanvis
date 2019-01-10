@@ -1,0 +1,245 @@
+K 25
+svn:wc:ra_dav:version-url
+V 31
+/svn/!svn/ver/395/trunk/lib/pcs
+END
+OutOfCoreKMeansClusterMapping.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/326/trunk/lib/pcs/OutOfCoreKMeansClusterMapping.cpp
+END
+MultiDimensionalScaling.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/326/trunk/lib/pcs/MultiDimensionalScaling.h
+END
+KMeansClustering.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/326/trunk/lib/pcs/KMeansClustering.h
+END
+BinMapping.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/326/trunk/lib/pcs/BinMapping.cpp
+END
+OutOfCoreMultiBinMapping.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/326/trunk/lib/pcs/OutOfCoreMultiBinMapping.cpp
+END
+MultiBinMapObjectReader.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/326/trunk/lib/pcs/MultiBinMapObjectReader.cpp
+END
+FastKMeansClustering.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/376/trunk/lib/pcs/FastKMeansClustering.cpp
+END
+AdaptiveKMeansClustering.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/376/trunk/lib/pcs/AdaptiveKMeansClustering.cpp
+END
+ClusterMapping.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/354/trunk/lib/pcs/ClusterMapping.cpp
+END
+MultiBinMapping.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/326/trunk/lib/pcs/MultiBinMapping.cpp
+END
+BinMapObject.h
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/326/trunk/lib/pcs/BinMapObject.h
+END
+BinMappedParallelCoordinatesRenderer.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/287/trunk/lib/pcs/BinMappedParallelCoordinatesRenderer.h
+END
+OutOfCoreTableImporter.h
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/326/trunk/lib/pcs/OutOfCoreTableImporter.h
+END
+MultiBinMapObjectWriter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/326/trunk/lib/pcs/MultiBinMapObjectWriter.cpp
+END
+OutOfCoreTableObject.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/326/trunk/lib/pcs/OutOfCoreTableObject.h
+END
+ClusterMapObject.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/326/trunk/lib/pcs/ClusterMapObject.h
+END
+ClusterMappedParallelCoordinatesRenderer.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/287/trunk/lib/pcs/ClusterMappedParallelCoordinatesRenderer.h
+END
+MultiBinMapObject.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/326/trunk/lib/pcs/MultiBinMapObject.h
+END
+MultiBinMappedParallelCoordinatesRenderer.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/287/trunk/lib/pcs/MultiBinMappedParallelCoordinatesRenderer.h
+END
+MultiDimensionalScaling.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/326/trunk/lib/pcs/MultiDimensionalScaling.cpp
+END
+KMeansClustering.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/376/trunk/lib/pcs/KMeansClustering.cpp
+END
+OutOfCoreBinMapping.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/326/trunk/lib/pcs/OutOfCoreBinMapping.h
+END
+OutOfCoreKMeansClusterMapping.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/326/trunk/lib/pcs/OutOfCoreKMeansClusterMapping.h
+END
+BinMapping.h
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/326/trunk/lib/pcs/BinMapping.h
+END
+OutOfCoreMultiBinMapping.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/326/trunk/lib/pcs/OutOfCoreMultiBinMapping.h
+END
+BinMapObject.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/326/trunk/lib/pcs/BinMapObject.cpp
+END
+BinMappedParallelCoordinatesRenderer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/340/trunk/lib/pcs/BinMappedParallelCoordinatesRenderer.cpp
+END
+OutOfCoreTableImporter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/326/trunk/lib/pcs/OutOfCoreTableImporter.cpp
+END
+MultiBinMapObjectReader.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/287/trunk/lib/pcs/MultiBinMapObjectReader.h
+END
+FastKMeansClustering.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/326/trunk/lib/pcs/FastKMeansClustering.h
+END
+AdaptiveKMeansClustering.h
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/326/trunk/lib/pcs/AdaptiveKMeansClustering.h
+END
+ClusterMapping.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/326/trunk/lib/pcs/ClusterMapping.h
+END
+OutOfCoreTableObject.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/355/trunk/lib/pcs/OutOfCoreTableObject.cpp
+END
+MultiBinMapping.h
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/326/trunk/lib/pcs/MultiBinMapping.h
+END
+ClusterMapObject.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/326/trunk/lib/pcs/ClusterMapObject.cpp
+END
+ClusterMappedParallelCoordinatesRenderer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/353/trunk/lib/pcs/ClusterMappedParallelCoordinatesRenderer.cpp
+END
+MultiBinMapObject.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/395/trunk/lib/pcs/MultiBinMapObject.cpp
+END
+MultiBinMappedParallelCoordinatesRenderer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/340/trunk/lib/pcs/MultiBinMappedParallelCoordinatesRenderer.cpp
+END
+MultiBinMapObjectWriter.h
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/287/trunk/lib/pcs/MultiBinMapObjectWriter.h
+END
+OutOfCoreBinMapping.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/326/trunk/lib/pcs/OutOfCoreBinMapping.cpp
+END

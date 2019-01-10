@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/392/trunk/app/ISFV2014/Streamline
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/392/trunk/app/ISFV2014/Streamline/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/384/trunk/app/ISFV2014/Streamline/kvsmake.conf
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/384/trunk/app/ISFV2014/Streamline/kvsmake.vc.conf
+END
+run.sh
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/390/trunk/app/ISFV2014/Streamline/run.sh
+END

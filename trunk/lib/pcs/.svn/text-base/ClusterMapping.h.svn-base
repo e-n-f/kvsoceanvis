@@ -1,0 +1,56 @@
+/*****************************************************************************/
+/**
+ *  @file   ClusterMapping.h
+ *  @author Naohisa Sakamoto
+ */
+/*----------------------------------------------------------------------------
+ *
+ *  Copyright (c) Visualization Laboratory, Kyoto University.
+ *  All rights reserved.
+ *  See http://www.viz.media.kyoto-u.ac.jp/kvs/copyright/ for details.
+ *
+ *  $Id$
+ */
+/*****************************************************************************/
+#ifndef KVSOCEANVIS__PCS__CLUSTER_MAPPING_H_INCLUDE
+#define KVSOCEANVIS__PCS__CLUSTER_MAPPING_H_INCLUDE
+
+#include <kvs/Module>
+#include <kvs/FilterBase>
+#include <kvs/TableObject>
+#include "ClusterMapObject.h"
+
+
+namespace kvsoceanvis
+{
+
+namespace pcs
+{
+
+/*===========================================================================*/
+/**
+ *  @brief  Cluster mapping class.
+ */
+/*===========================================================================*/
+class ClusterMapping : public kvs::FilterBase, public pcs::ClusterMapObject
+{
+    kvsModuleName( kvsoceanvis::pcs::ClusterMapping );
+    kvsModuleCategory( Filter );
+    kvsModuleBaseClass( kvs::FilterBase );
+    kvsModuleSuperClass( pcs::ClusterMapObject );
+
+public:
+
+    ClusterMapping();
+    ClusterMapping( const kvs::ObjectBase* object );
+
+public:
+
+    SuperClass* exec( const kvs::ObjectBase* object );
+};
+
+} // end of namespace pcs
+
+} // end of namespace kvsoceanvis
+
+#endif // KVSOCEANVIS__PCS__CLUSTER_MAPPING_H_INCLUDE

@@ -1,0 +1,128 @@
+/*****************************************************************************/
+/**
+ *  @file   BinMappedParallelCoordinatesRenderer.cpp
+ *  @author Naohisa Sakamoto
+ */
+/*----------------------------------------------------------------------------
+ *
+ *  Copyright (c) Visualization Laboratory, Kyoto University.
+ *  All rights reserved.
+ *  See http://www.viz.media.kyoto-u.ac.jp/kvs/copyright/ for details.
+ *
+ *  $Id$
+ */
+/*****************************************************************************/
+#include "BinMappedParallelCoordinatesRenderer.h"
+#include <kvs/OpenGL>
+#include <kvs/Camera>
+#include <kvs/Light>
+#include <kvs/ObjectBase>
+#include <kvs/AnyValueArray>
+#include "BinMapObject.h"
+
+
+namespace
+{
+
+void BeginDraw()
+{
+    GLint vp[4]; glGetIntegerv( GL_VIEWPORT, vp );
+    const GLint left = vp[0];
+    const GLint bottom = vp[1];
+    const GLint right = vp[2];
+    const GLint top = vp[3];
+
+    glPushAttrib( GL_ALL_ATTRIB_BITS );
+    glMatrixMode( GL_MODELVIEW );  glPushMatrix(); glLoadIdentity();
+    glMatrixMode( GL_PROJECTION ); glPushMatrix(); glLoadIdentity();
+    glOrtho( left, right, top, bottom, -1, 1 ); // The origin is upper-left.
+    glDisable( GL_DEPTH_TEST );
+}
+
+void EndDraw()
+{
+    glPopMatrix();
+    glMatrixMode( GL_MODELVIEW );
+    glPopMatrix();
+    glPopAttrib();
+}
+
+} // end of namespace
+
+
+namespace kvsoceanvis
+{
+
+namespace pcs
+{
+
+BinMappedParallelCoordinatesRenderer::BinMappedParallelCoordinatesRenderer():
+    m_color_map( 256 )
+{
+    m_color_map.create();
+}
+
+void BinMappedParallelCoordinatesRenderer::exec( kvs::ObjectBase* object, kvs::Camera* camera, kvs::Light* light )
+{
+    kvs::IgnoreUnusedVariable( light );
+
+    pcs::BinMapObject* bin_map_object = reinterpret_cast<pcs::BinMapObject*>( object );
+
+    glPushAttrib( GL_CURRENT_BIT | GL_ENABLE_BIT );
+
+    glEnable( GL_BLEND );
+    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+
+    ::BeginDraw();
+
+    const size_t naxes = bin_map_object->naxes();
+    const size_t margin = 30;
+    const size_t y0 = camera->windowHeight() - margin;
+    const size_t y1 = margin;
+
+    const float stride = ( camera->windowWidth() - margin * 2 ) / ( naxes - 1 );
+    for ( size_t i = 0; i < naxes - 1; i++ )
+    {
+        const float x0 = margin + stride * i;
+        const float x1 = x0 + stride;
+
+        const size_t nbins0 = bin_map_object->nbins(i);
+        const size_t nbins1 = bin_map_object->nbins(i+1);
+
+        const float stride0 = float( y0 - y1 ) / nbins0;
+        const float stride1 = float( y0 - y1 ) / nbins1;
+
+        const pcs::BinMapObject::BinMap& bin_map = bin_map_object->binMap(i);
+        for ( size_t y = 0, index = 0; y < nbins1; y++ )
+        {
+            for ( size_t x = 0; x < nbins0; x++, index++ )
+            {
+                const kvs::UInt32 value = bin_map[index];
+                if ( value == 0 ) continue;
+                const float xa = x0;
+                const float ya = y0 - stride0 * x;
+                const float xb = x1;
+                const float yb = y0 - stride1 * y;
+                const float xc = x1;
+                const float yc = yb - stride1;
+                const float xd = x0;
+                const float yd = ya - stride0;
+                glBegin( GL_QUADS );
+                glColor4ub( 0, 0, 0, 10 );
+                glVertex2f( xa, ya );
+                glVertex2f( xb, yb );
+                glVertex2f( xc, yc );
+                glVertex2f( xd, yd );
+                glEnd();
+            }
+        }
+    }
+
+    ::EndDraw();
+
+    glPopAttrib();
+}
+
+} // end of namespace pcs
+
+} // end of namespace kvsoceanvis

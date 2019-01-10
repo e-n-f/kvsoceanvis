@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/370/trunk/app/ISFV2014/Arrow
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/366/trunk/app/ISFV2014/Arrow/kvsmake.vc.conf
+END
+run.sh
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/366/trunk/app/ISFV2014/Arrow/run.sh
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/370/trunk/app/ISFV2014/Arrow/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/366/trunk/app/ISFV2014/Arrow/kvsmake.conf
+END

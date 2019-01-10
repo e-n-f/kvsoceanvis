@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/345/trunk/test/vorticity
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/svn/!svn/ver/345/trunk/test/vorticity/main.cpp
+END
+kvsmake.conf
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/301/trunk/test/vorticity/kvsmake.conf
+END
+kvsmake.vc.conf
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/301/trunk/test/vorticity/kvsmake.vc.conf
+END
